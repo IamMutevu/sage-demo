@@ -11,7 +11,8 @@ class SageApi{
                 $auth->getAccessToken($code);
             }
 
-            header('Location: /?settings/accounts?success=Integrated successfully');
+            header('Location: /admin/index.php?settings/accounts?success=Integrated successfully');
+            exit;
         }
         else{
             switch ($params['error']) {

@@ -1,10 +1,13 @@
 <?php
 
-require_once '../config.php';
+// include '../config.php';
 require_once 'DatabaseConnection.php';
+require_once 'Configuration.php';
 
 class Authentication{
     public function getAccessToken($code){
+        Configuration::configure();
+        
         $parameters = array(
             'client_id' => CLIENT_ID,
             'client_secret' => CLIENT_SECRET,
@@ -16,11 +19,12 @@ class Authentication{
         curl_setopt($curl, CURLOPT_URL, "https://oauth.accounting.sage.com/token");
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($curl, CURLOPT_POST, 1);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $parameters);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Accept: application/json', 'Content-Type: application/x-www-form-urlencoded'));
+        curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($parameters));
         $response = curl_exec($curl);
         curl_close($curl);
 
-        echo $response;
+
     }
 
     private function storeAccessToken($user_id, $access_token, $code){

@@ -13,4 +13,8 @@ if (!empty($_POST)) {
 
 // Create SageApi object
 $sage = new SageApi();
-$sage->processCallback($params);
+
+if($params['code']){
+    $sage->processCallback($params);
+}
+
