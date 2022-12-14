@@ -17,7 +17,7 @@ $params['user_id'] = $user_id;
 // Create SageApi object
 $sage = new SageApi();
 
-if(in_array('code', $params)){
+if(isset($params['code'])){
     $sage->processCallback($params);
 }
 

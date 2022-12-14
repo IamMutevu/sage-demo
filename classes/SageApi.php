@@ -34,12 +34,13 @@ class SageApi{
         $auth = new Authentication();
         $token = $auth->retrieveAccessToken();
 
-        if(count($token) > 0){
+        if($token != false){
             $auth->refreshAccessToken();
             return true;
         }
         else{
             return false;
         }
+
     }
 }
