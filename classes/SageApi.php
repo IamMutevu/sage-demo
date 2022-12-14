@@ -1,5 +1,6 @@
 <?php
 require_once 'Authentication.php';
+require_once 'Contacts.php';
 
 class SageApi{
     public function processCallback($params){
@@ -8,8 +9,7 @@ class SageApi{
                 $code = $params['code'];
                 $user_id = $params['user_id'];
 
-                $auth = new Authentication();
-                $auth->getAccessToken($code, $user_id);
+                Authentication::requestAccessToken($code, $user_id);
             }
 
             header('Location: /admin/index.php?settings/accounts&success=Integrated successfully');
@@ -31,16 +31,19 @@ class SageApi{
     }
 
     public function isAuthenticated(){
-        $auth = new Authentication();
-        $token = $auth->retrieveAccessToken();
+        $token = Authentication::retrieveAccessToken();
 
         if($token != false){
-            $auth->refreshAccessToken();
+            Authentication::refreshAccessToken();
             return true;
         }
         else{
             return false;
         }
 
+    }
+
+    public function createContact($client_id){
+        Contacts::createContact($client_id);
     }
 }

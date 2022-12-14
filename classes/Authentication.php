@@ -5,7 +5,11 @@ require_once 'DatabaseConnection.php';
 require_once 'Configuration.php';
 
 class Authentication{
-    public function getAccessToken($code, $user_id){
+    public static function getAccessToken(){
+
+    }
+
+    public static function requestAccessToken($code, $user_id){
         Configuration::configure();
         
         $parameters = array(
@@ -24,7 +28,7 @@ class Authentication{
         $access_token = curl_exec($curl);
         curl_close($curl);
 
-        $this->storeAccessToken($user_id, $access_token);
+        self::storeAccessToken($user_id, $access_token);
     }
 
     private function storeAccessToken($user_id, $access_token){
@@ -34,7 +38,7 @@ class Authentication{
         $connection = null;
     }
 
-    public function retrieveAccessToken(){
+    public static function retrieveAccessToken(){
         $connection = DatabaseConnection::connect();
         $query = $connection->prepare("SELECT access_tokens.access_token FROM access_tokens WHERE app = ?");
         $query->execute(array("sage"));
@@ -42,7 +46,7 @@ class Authentication{
         return $query->fetch(PDO::FETCH_OBJ);
     }
 
-    public function refreshAccessToken(){
+    public static function refreshAccessToken(){
 
     }
 }
