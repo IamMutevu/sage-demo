@@ -6,12 +6,13 @@ class SageApi{
         if(!isset($params['error'])){
             if(isset($params['code'])){
                 $code = $params['code'];
+                $user_id = $params['user_id'];
 
                 $auth = new Authentication();
-                $auth->getAccessToken($code);
+                $auth->getAccessToken($code, $user_id);
             }
 
-            header('Location: /admin/index.php?settings/accounts?success=Integrated successfully');
+            header('Location: /admin/index.php?settings/accounts&success=Integrated successfully');
             exit;
         }
         else{
@@ -26,6 +27,19 @@ class SageApi{
             }
 
             header('Location: /?settings/accounts?error='.$error);
+        }
+    }
+
+    public function isAuthenticated(){
+        $auth = new Authentication();
+        $token = $auth->retrieveAccessToken();
+
+        if(count($token) > 0){
+            $auth->refreshAccessToken();
+            return true;
+        }
+        else{
+            return false;
         }
     }
 }

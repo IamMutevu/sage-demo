@@ -11,10 +11,13 @@ if (!empty($_POST)) {
     $params = json_decode(file_get_contents("php://input"), true);
 }
 
+// Add user ids to params array. How it's added here assumes that it exists as a declared variable prior to the inclusion of this script
+$params['user_id'] = $user_id;
+
 // Create SageApi object
 $sage = new SageApi();
 
-if($params['code']){
+if(in_array('code', $params)){
     $sage->processCallback($params);
 }
 
