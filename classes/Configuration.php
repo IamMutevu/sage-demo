@@ -8,10 +8,10 @@ class Configuration{
             define("CLIENT_ID", $configs->client_id);
             define("CLIENT_SECRET", $configs->client_secret);
             define("REDIRECT_URI", $configs->redirect_uri);
-            define("SERVER_NAME", $configs->redirect_uri);
-            define("DATABASE", $configs->redirect_uri);
-            define("DB_USER", $configs->redirect_uri);
-            define("DB_PASSWORD", $configs->redirect_uri);
+            define("SERVER_NAME", $configs->server_name);
+            define("DATABASE", $configs->database);
+            define("DB_USER", $configs->db_user);
+            define("DB_PASSWORD", $configs->db_password);
         
         }
         else{
