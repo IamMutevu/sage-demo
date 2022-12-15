@@ -11,21 +11,26 @@ class Contacts{
     public static function createContact($client_id){
         $data = self::getClientData($client_id);
 
-        $contact = array(
-            "contact" => $data
-        );
-        $parameters = json_encode($contact);
+        $myfile = fopen("data.txt", "a") or die("Unable to open file!");
+        $txt = json_encode($data)."\n";
+        fwrite($myfile, $txt);
+        fclose($myfile);
+        
+        // $contact = array(
+        //     "contact" => $data
+        // );
+        // $parameters = json_encode($contact);
 
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, "https://api.accounting.sage.com/v3.1/contacts");
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl, CURLOPT_POST, 1);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Accept: application/json', 'Content-Type: application/json', 'Authorization:Bearer '.Authentication::getAccessToken()));
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $parameters);
-        $response = curl_exec($curl);
-        curl_close($curl);
+        // $curl = curl_init();
+        // curl_setopt($curl, CURLOPT_URL, "https://api.accounting.sage.com/v3.1/contacts");
+        // curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        // curl_setopt($curl, CURLOPT_POST, 1);
+        // curl_setopt($curl, CURLOPT_HTTPHEADER, array('Accept: application/json', 'Content-Type: application/json', 'Authorization:Bearer '.Authentication::getAccessToken()));
+        // curl_setopt($curl, CURLOPT_POSTFIELDS, $parameters);
+        // $response = curl_exec($curl);
+        // curl_close($curl);
 
-        self::linkContactRecord($response);
+        // self::linkContactRecord($response);
     }
 
     public function updateContact($data){
