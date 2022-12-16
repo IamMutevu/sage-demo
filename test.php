@@ -7,4 +7,4 @@ require_once 'classes/SageApi.php';
 
 $sage = new SageApi();
 
-$sage->createContact(8);
+$sage->createContact(18);

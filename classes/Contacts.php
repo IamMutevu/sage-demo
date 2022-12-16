@@ -30,7 +30,7 @@ class Contacts{
         $response = curl_exec($curl);
         curl_close($curl);
 
-        // self::linkContactRecord($response);
+        self::linkContactRecord(json_decode($response), $client_id);
     }
 
     public function updateContact($data){
@@ -51,11 +51,11 @@ class Contacts{
         $this->linkContactRecord($response);
     }
 
-    private function linkContactRecord($contact){
-        // $connection = DatabaseConnection::connect();
-        // $query = $connection->prepare("INSERT INTO `access_tokens`(access_token, user_id, app, created_at, updated_at) VALUES(?, ?, ?, ?, ?)");
-        // $query->execute(array(json_encode($access_token), $user_id, "sage", date("d-m-Y H:i"), date("d-m-Y H:i")));
-        // $connection = null;
+    private static function linkContactRecord($contact, $client_id){
+        $connection = DatabaseConnection::connect();
+        $query = $connection->prepare("INSERT INTO `sage_contacts`(name, client_id, contact_id, created_at, updated_at) VALUES(?, ?, ?, ?, ?)");
+        $query->execute(array($contact->displayed_as, $contact->id, $client_id, date("d-m-Y H:i"), date("d-m-Y H:i")));
+        $connection = null;
     }
 
     private static function getClientData($client_id){
