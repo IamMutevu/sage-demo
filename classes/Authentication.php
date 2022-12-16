@@ -2,7 +2,8 @@
 
 // include '../config.php';
 require_once 'DatabaseConnection.php';
-require_once 'Configuration.php';
+// require_once 'Configuration.php';
+// Configuration::configure();
 
 class Authentication{
     public static function getAccessToken(){
@@ -10,17 +11,15 @@ class Authentication{
 
         // Check if token has expired
         if(time() - strtotime($stored_token_record->updated_at) > 180){
-            self::refreshAccessToken($stored_token_record->token);
+            self::refreshAccessToken(json_decode($stored_token_record->token));
         }
 
-        $access_token = self::retrieveAccessToken()->token->access_token;
+        $access_token = json_decode(self::retrieveAccessToken()->token)->access_token;
 
         return $access_token;
     }
 
     public static function requestAccessToken($code, $user_id){
-        Configuration::configure();
-        
         $parameters = array(
             'client_id' => CLIENT_ID,
             'client_secret' => CLIENT_SECRET,
@@ -40,17 +39,7 @@ class Authentication{
         self::storeAccessToken($user_id, $access_token);
     }
 
-    public static function retrieveAccessToken(){
-        $connection = DatabaseConnection::connect();
-        $query = $connection->prepare("SELECT access_tokens.access_token, access_tokens.updated_at  FROM access_tokens WHERE app = ?");
-        $query->execute(array("sage"));
-        $connection = null;
-        return $query->fetch(PDO::FETCH_OBJ);
-    }
-
     public static function refreshAccessToken($stored_token){
-        Configuration::configure();
-        
         $parameters = array(
             'client_id' => CLIENT_ID,
             'client_secret' => CLIENT_SECRET,
@@ -69,14 +58,22 @@ class Authentication{
         self::updateStoredAccessToken($access_token);
     }
 
+    public static function retrieveAccessToken(){
+        $connection = DatabaseConnection::connect();
+        $query = $connection->prepare("SELECT access_tokens.token, access_tokens.updated_at  FROM access_tokens WHERE app = ?");
+        $query->execute(array("sage"));
+        $connection = null;
+        return $query->fetch(PDO::FETCH_OBJ);
+    }
+
     private function storeAccessToken($user_id, $access_token){
         $connection = DatabaseConnection::connect();
         $query = $connection->prepare("INSERT INTO `access_tokens`(token, user_id, app, created_at, updated_at) VALUES(?, ?, ?, ?, ?)");
-        $query->execute(array(json_encode($access_token), $user_id, "sage", date("d-m-Y H:i"), date("d-m-Y H:i")));
+        $query->execute(array($access_token, $user_id, "sage", date("d-m-Y H:i"), date("d-m-Y H:i")));
         $connection = null;
     }
 
-    private function updateStoredAccessToken($access_token){
+    private static function updateStoredAccessToken($access_token){
         $connection = DatabaseConnection::connect();
         $query = $connection->prepare("UPDATE `access_tokens` SET token = ?, updated_at = ? WHERE app = ? ");
         $query->execute(array($access_token, date("d-m-Y H:i"), "sage"));

@@ -1,12 +1,10 @@
 <?php
 
-require_once 'Configuration.php';
+// require_once 'Configuration.php';
 
 class DatabaseConnection{
 
 	public static function connect(){
-		Configuration::configure();
-
 		$servername = SERVER_NAME;
 		$username = DB_USER;
 		$password = DB_PASSWORD;

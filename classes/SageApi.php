@@ -1,6 +1,8 @@
 <?php
 require_once 'Authentication.php';
 require_once 'Contacts.php';
+require_once 'Configuration.php';
+Configuration::configure();
 
 class SageApi{
     public function processCallback($params){
@@ -34,7 +36,6 @@ class SageApi{
         $token = Authentication::retrieveAccessToken();
 
         if($token != false){
-            Authentication::refreshAccessToken();
             return true;
         }
         else{
